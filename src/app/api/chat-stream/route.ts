@@ -53,7 +53,10 @@ export async function GET(request: Request) {
           
           if (!useUpstash && redisCloudClient && redisCloudConnected) {
             try {
-              messages = await redisCloudClient.lRange(`${channel}:messages`, 0, 4);
+              messages = await Promise.race([
+                redisCloudClient.lRange(`${channel}:messages`, 0, 4),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000))
+              ]);
             } catch (err) {
               console.log('❌ Redis Cloud failed, switching to Upstash');
               useUpstash = true;
