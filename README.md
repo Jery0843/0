@@ -42,7 +42,7 @@ This is the optimized deployment version of 0xJerry's Lab with password-protecte
 ## Test Password Feature
 
 - Machine: Academy (id: academy)
-- Password: academy123
+- Password: academy123 .
 
 ## File Structure
 
