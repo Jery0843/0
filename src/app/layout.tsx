@@ -7,21 +7,21 @@ import RootLayoutContent from "@/components/RootLayoutContent";
 const orbitron = Orbitron({
   variable: "--font-orbitron",
   subsets: ["latin"],
-  weight: ["400", "700", "900"],
+  weight: "400",
   display: "swap",
 });
 
 const firaCode = Fira_Code({
   variable: "--font-fira-code",
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: "400",
   display: "swap",
 });
 
 const righteous = Righteous({
   variable: "--font-righteous",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: "400",
   display: "swap",
 });
 
