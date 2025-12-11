@@ -7,12 +7,15 @@ if (process.env.REDIS_CLOUD_HOST) {
   redisCloudClient = createClient({
     socket: {
       host: process.env.REDIS_CLOUD_HOST,
-      port: parseInt(process.env.REDIS_CLOUD_PORT || '13442')
+      port: parseInt(process.env.REDIS_CLOUD_PORT || '13442'),
+      connectTimeout: 5000,
+      reconnectStrategy: false
     },
     password: process.env.REDIS_CLOUD_PASSWORD
   });
   
   redisCloudClient.connect().catch(() => {
+    console.log('Redis Cloud connection failed, using Upstash');
     redisCloudClient = null;
   });
 }
@@ -26,7 +29,10 @@ export const redis = {
   async lpush(key: string, value: string) {
     if (redisCloudClient) {
       try {
-        return await redisCloudClient.lPush(key, value);
+        return await Promise.race([
+          redisCloudClient.lPush(key, value),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000))
+        ]);
       } catch (err) {
         console.log('Redis Cloud lpush failed, using Upstash');
       }
@@ -36,7 +42,10 @@ export const redis = {
   async ltrim(key: string, start: number, stop: number) {
     if (redisCloudClient) {
       try {
-        return await redisCloudClient.lTrim(key, start, stop);
+        return await Promise.race([
+          redisCloudClient.lTrim(key, start, stop),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000))
+        ]);
       } catch (err) {
         console.log('Redis Cloud ltrim failed, using Upstash');
       }
@@ -46,7 +55,10 @@ export const redis = {
   async lrange(key: string, start: number, stop: number) {
     if (redisCloudClient) {
       try {
-        return await redisCloudClient.lRange(key, start, stop);
+        return await Promise.race([
+          redisCloudClient.lRange(key, start, stop),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000))
+        ]);
       } catch (err) {
         console.log('Redis Cloud lrange failed, using Upstash');
       }
