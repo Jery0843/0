@@ -4,13 +4,12 @@ frontend:
     preBuild:
       commands:
         - export PUPPETEER_SKIP_DOWNLOAD=true
-        - rm -rf node_modules package-lock.json
         - npm install
     build:
       commands:
         - npm run build
   artifacts:
-    baseDirectory: .next
+    baseDirectory: .
     files:
       - '**/*'
   cache:
