@@ -192,7 +192,7 @@ const Header = () => {
         if (response.ok) {
           // Set user session cookie
           const sessionToken = Buffer.from(`${loginForm.email}:${Date.now()}`).toString('base64');
-          document.cookie = `user_session=${sessionToken}; path=/; max-age=${24*60*60}; SameSite=Strict`;
+          document.cookie = `user_session=${sessionToken}; path=/; max-age=${60*60}; SameSite=Strict`;
           
           setShowLoginModal(false);
           setLoginForm({ email: '', otp: '' });
