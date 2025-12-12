@@ -16,11 +16,9 @@ const getRedisClient = async () => {
           host: process.env.REDIS_CLOUD_HOST,
           port: parseInt(process.env.REDIS_CLOUD_PORT || '13442'),
           connectTimeout: 5000,
-          keepAlive: 30000,
           reconnectStrategy: (retries) => Math.min(retries * 50, 500)
         },
-        password: process.env.REDIS_CLOUD_PASSWORD,
-        database: 0
+        password: process.env.REDIS_CLOUD_PASSWORD
       });
       await redisCloudClient.connect();
       isConnecting = false;
