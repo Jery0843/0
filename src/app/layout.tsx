@@ -7,21 +7,21 @@ import RootLayoutContent from "@/components/RootLayoutContent";
 const orbitron = Orbitron({
   variable: "--font-orbitron",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "700", "900"],
   display: "swap",
 });
 
 const firaCode = Fira_Code({
   variable: "--font-fira-code",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["300", "400", "500"],
   display: "swap",
 });
 
 const righteous = Righteous({
   variable: "--font-righteous",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400"],
   display: "swap",
 });
 
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://0xjerry.is-a.dev",
+    url: "https://0xjerry.jerome.co.in",
     title: "0xJerry's Lab - Cybersecurity Research & HTB Writeups",
     description:
       "Expert cybersecurity research, penetration testing tutorials, and detailed Hack The Box writeups. Learn offensive security with comprehensive guides.",
@@ -96,7 +96,7 @@ export const metadata: Metadata = {
   category: "technology",
   classification: "Cybersecurity Education",
   alternates: {
-    canonical: "https://0xjerry.is-a.dev",
+    canonical: "https://0xjerry.jerome.co.in",
   },
 };
 
