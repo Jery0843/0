@@ -315,6 +315,7 @@ const UserDashboard = () => {
           textarea.style.height = '42px';
           textarea.value = '';
         }
+        fetchChat();
       }
     } catch (error) {
       console.error('Error sending message:', error);
@@ -478,6 +479,7 @@ const UserDashboard = () => {
           textarea.style.height = '42px';
           textarea.value = '';
         }
+        fetchRootChat();
       }
     } catch (error) {
       console.error('Error sending message:', error);
