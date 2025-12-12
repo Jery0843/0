@@ -2,22 +2,35 @@ import { Redis } from '@upstash/redis';
 import { createClient } from 'redis';
 
 let redisCloudClient: any = null;
+let isConnecting = false;
 
-if (process.env.REDIS_CLOUD_HOST) {
-  redisCloudClient = createClient({
-    socket: {
-      host: process.env.REDIS_CLOUD_HOST,
-      port: parseInt(process.env.REDIS_CLOUD_PORT || '13442'),
-      connectTimeout: 5000,
-      reconnectStrategy: false
-    },
-    password: process.env.REDIS_CLOUD_PASSWORD
-  });
+const getRedisClient = async () => {
+  if (redisCloudClient?.isOpen) return redisCloudClient;
+  if (isConnecting) return null;
   
-  redisCloudClient.connect().catch(() => {
-    console.log('Redis Cloud connection failed, using Upstash');
-    redisCloudClient = null;
-  });
+  if (process.env.REDIS_CLOUD_HOST && !redisCloudClient) {
+    isConnecting = true;
+    try {
+      redisCloudClient = createClient({
+        socket: {
+          host: process.env.REDIS_CLOUD_HOST,
+          port: parseInt(process.env.REDIS_CLOUD_PORT || '13442'),
+          connectTimeout: 5000,
+          keepAlive: 30000,
+          reconnectStrategy: (retries) => Math.min(retries * 50, 500)
+        },
+        password: process.env.REDIS_CLOUD_PASSWORD,
+        database: 0
+      });
+      await redisCloudClient.connect();
+      isConnecting = false;
+      return redisCloudClient;
+    } catch {
+      redisCloudClient = null;
+      isConnecting = false;
+    }
+  }
+  return null;
 }
 
 const upstashRedis = new Redis({
@@ -27,41 +40,38 @@ const upstashRedis = new Redis({
 
 export const redis = {
   async lpush(key: string, value: string) {
-    if (redisCloudClient) {
+    const client = await getRedisClient();
+    if (client) {
       try {
         return await Promise.race([
-          redisCloudClient.lPush(key, value),
+          client.lPush(key, value),
           new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000))
         ]);
-      } catch (err) {
-        console.log('Redis Cloud lpush failed, using Upstash');
-      }
+      } catch {}
     }
     return await upstashRedis.lpush(key, value);
   },
   async ltrim(key: string, start: number, stop: number) {
-    if (redisCloudClient) {
+    const client = await getRedisClient();
+    if (client) {
       try {
         return await Promise.race([
-          redisCloudClient.lTrim(key, start, stop),
+          client.lTrim(key, start, stop),
           new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000))
         ]);
-      } catch (err) {
-        console.log('Redis Cloud ltrim failed, using Upstash');
-      }
+      } catch {}
     }
     return await upstashRedis.ltrim(key, start, stop);
   },
   async lrange(key: string, start: number, stop: number) {
-    if (redisCloudClient) {
+    const client = await getRedisClient();
+    if (client) {
       try {
         return await Promise.race([
-          redisCloudClient.lRange(key, start, stop),
+          client.lRange(key, start, stop),
           new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000))
         ]);
-      } catch (err) {
-        console.log('Redis Cloud lrange failed, using Upstash');
-      }
+      } catch {}
     }
     return await upstashRedis.lrange(key, start, stop);
   }
