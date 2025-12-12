@@ -11,10 +11,10 @@ export async function GET(request: Request) {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
       };
 
-      send({ type: 'connected' });
       const channel = `chat:${chatType}`;
-      let lastCheck = Date.now();
+      let lastCheck = Date.now() - 5000;
 
+      send({ type: 'connected' });
       console.log(`Chat stream connected: ${chatType}`);
 
       const interval = setInterval(async () => {
