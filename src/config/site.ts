@@ -5,7 +5,7 @@
 
 export const siteConfig = {
   // Domain Configuration
-  domain: '0xjerry.is-a.dev',
+  domain: '0xjerry.jerome.co.in',
   name: "0xJerry's Lab",
   title: "0xJerry's Lab - Cybersecurity Research & HTB Writeups",
   description: "Advanced cybersecurity research, HTB writeups, exploit development, and penetration testing guides. Learn ethical hacking techniques with detailed step-by-step tutorials.",
