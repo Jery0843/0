@@ -3,9 +3,7 @@ import { HTBMachinesDB, CTFWriteupsDB, THMRoomsDB } from '@/lib/db';
 import machinesData from '@/data/machines.json';
 
 export async function GET(request: Request) {
-  // Auto-detect the base URL from the request
-  const url = new URL(request.url);
-  const baseUrl = `${url.protocol}//${url.host}`;
+  const baseUrl = 'https://0xjerry.jerome.co.in';
   const currentDate = new Date().toISOString();
   const toW3CDate = (value: any): string => {
     if (!value) return currentDate;
